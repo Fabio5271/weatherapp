@@ -193,7 +193,8 @@ main {
   font-size: 32px;
   font-weight: 500;
   text-align: center;
-  text-shadow: 1px 3px rgba(0, 0, 0, 0.25)  ;
+  text-shadow: 1px 3px rgba(0, 0, 0, 0.25);
+  margin-bottom: 3px;
 }
 
 .location-box .date {
@@ -206,13 +207,14 @@ main {
 
 .weather-box {
   text-align: center;
-  margin-bottom:5px ;
+  padding-bottom:20px ;
 }
 
 .weather-spacer {
   height: 0px;
-  border-bottom: 1px solid #fff;
-  box-shadow: 0px 2px rgba(0, 0, 0, 0.25);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+  /* border-radius: 1px; */
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.25);
   margin: 5px auto;
   width: 75%;
 }
@@ -227,7 +229,7 @@ main {
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 16px;
-  margin: 30px 0px;
+  margin: 25px 0px 25px;
 
   box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
 }
@@ -238,7 +240,6 @@ main {
   font-weight: 700;
   font-style: italic;
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
-  margin-bottom: 15px;
 }
 
 .weather-extras {
@@ -267,11 +268,5 @@ main {
   font-size: 50px;
   font-weight: 900;
 }
-/* 
-.weather-extras .feelslike .flt {
-  font-size: 24px;
-  font-weight: 500;
-} */
-
 
 </style>
