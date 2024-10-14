@@ -1,4 +1,5 @@
 # weatherapp
+A nice-looking weather app written in Vue
 
 ## Project setup
 ```
