@@ -1,5 +1,5 @@
 # weatherapp
-A nice-looking weather app written in Vue
+A nice-looking weather app written in Vue, uses [OpenWeatherMap Weather API v2.5](https://openweathermap.org/current)
 
 ## Project setup
 ```
