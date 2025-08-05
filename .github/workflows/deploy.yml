@@ -27,7 +27,14 @@ jobs:
         npm install
         npm run build
       env:
-        VUE_APP_OMW_KEY: ${{ secrets.VUE_APP_OWM_KEY }}
+        VUE_APP_OMW_KEY: ${{ secrets.VUE_APP_OWM_KEY }}a
+
+    - name: Clean Git References
+      run: |
+        git fetch origin
+        git remote prune origin
+        rm -f .git/refs/remotes/origin/gh-pages
+      if: matrix.node-version == '22.x' # Run only for one matrix job to avoid conflicts
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
