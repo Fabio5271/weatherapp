@@ -27,7 +27,7 @@ jobs:
         npm install
         npm run build
       env:
-        VUE_APP_OMW_KEY: ${{ secrets.VUE_APP_OWM_KEY }}a
+        VUE_APP_OWM_KEY: ${{ secrets.VUE_APP_OWM_KEY }}
 
     - name: Clean Git References
       run: |
