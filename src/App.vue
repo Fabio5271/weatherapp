@@ -1,6 +1,4 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/> -->
   <div id="app"
   :class="{'freezing': typeof weather.main != 'undefined' && weather.main.temp <= 0,
           'cold': typeof weather.main != 'undefined' && weather.main.temp > 0 && weather.main.temp <= 10,
@@ -45,13 +43,11 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
   data () {
     return {
-      api_key: '8c10cdbaa002cf3e6cbaaf08ab64077a',
+      api_key: process.env.VUE_APP_OWM_KEY,
       url_base: 'https://api.openweathermap.org/data/2.5/',
       query: '',
       weather: {}
@@ -82,21 +78,10 @@ export default {
       return `${day} ${date} ${month} ${year}`;
     }
   }
-  // components: {
-  //   HelloWorld
-  // }
 }
 </script>
 
 <style>
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-} */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -213,7 +198,6 @@ main {
 .weather-spacer {
   height: 0px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.25);
-  /* border-radius: 1px; */
   box-shadow: 1px 1px rgba(0, 0, 0, 0.25);
   margin: 5px auto;
   width: 75%;
