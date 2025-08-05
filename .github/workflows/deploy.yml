@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: Deploy to Github Pages
 
 on:
   push:
@@ -26,3 +26,9 @@ jobs:
       run: |
         npm install
         npm run build
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        folder: dist
