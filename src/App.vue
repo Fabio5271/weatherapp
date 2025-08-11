@@ -42,13 +42,14 @@
   </div>
 </template>
 
+
+
 <script>
 export default {
   name: 'App',
   data () {
     return {
-      api_key: process.env.VUE_APP_OWM_KEY,
-      url_base: 'https://api.openweathermap.org/data/2.5/',
+      url_base: 'https://weatherapp-backend-fawn.vercel.app/api/',
       query: '',
       weather: {}
     }
@@ -56,7 +57,7 @@ export default {
   methods: {
     fetchWeather (e) {
       if (e.key == "Enter") {
-        fetch(`${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`)
+        fetch(`${this.url_base}weather?q=${this.query}`)
         .then(res => {
           return res.json();
         }).then(this.setResults);
@@ -80,6 +81,8 @@ export default {
   }
 }
 </script>
+
+
 
 <style>
 * {
@@ -252,5 +255,4 @@ main {
   font-size: 50px;
   font-weight: 900;
 }
-
 </style>
