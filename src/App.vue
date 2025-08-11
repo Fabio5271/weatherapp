@@ -20,7 +20,7 @@
             @keypress="fetchWeather"/>
       </div>
 
-      <div class="weather-wrap" v-if="typeof weather.main != 'undefined'">
+      <div class="results-container" v-if="typeof weather.main != 'undefined'">
         <div class="location-box">
           <div class="location">{{ weather.name }}, {{ weather.sys.country }}</div>
           <div class="date">{{ dateBuilder() }}</div>
@@ -34,8 +34,8 @@
         <div class="weather-spacer"></div>
 
         <div class="weather-extras">
-          <div class="feelslike"><span class="flt">Feels Like</span><br><span class="fltemp">{{ Math.round(weather.main.feels_like) }}°C</span></div>
-          <div class="humidity"><span class="flt">Humidity</span><br><span class="humval">{{ weather.main.humidity }}%</span></div>
+          <div class="extra-widget feelslike"><span class="flt">Feels Like</span><br><span class="value fltemp">{{ Math.round(weather.main.feels_like) }}°C</span></div>
+          <div class="extra-widget humidity"><span class="flt">Humidity</span><br><span class="value humval">{{ weather.main.humidity }}%</span></div>
         </div>
       </div>
     </main>
@@ -144,13 +144,15 @@ body {
 main {
   min-height: 100vh;
   padding: 25px;
-
+  display: grid;
+  grid-template-rows: min-content;
+  align-items: start;
+  justify-content: stretch;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.50));
 }
 
 .search-box {
   width: 100%;
-  margin-bottom: 30px;
 }
 
 .search-box .search-bar {
@@ -176,9 +178,18 @@ main {
   border-radius: 16px 0px 16px 0px;
 }
 
+.results-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  margin: 25px 0 75px;
+}
+
 .location-box .location {
   color: #fff;
-  font-size: 32px;
+  font-size: 38px;
   font-weight: 500;
   text-align: center;
   text-shadow: 1px 3px rgba(0, 0, 0, 0.25);
@@ -187,22 +198,22 @@ main {
 
 .location-box .date {
   color: #fff;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 300;
   font-style: italic;
   text-align: center;
+  text-shadow: 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .weather-box {
   text-align: center;
-  padding-bottom:20px ;
 }
 
 .weather-spacer {
   height: 0px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.25);
   box-shadow: 1px 1px rgba(0, 0, 0, 0.25);
-  margin: 5px auto;
+  margin: 20px auto 15px;
   width: 75%;
 }
 
@@ -231,27 +242,25 @@ main {
 
 .weather-extras {
   display: flex;
-  justify-content: space-evenly;
-  text-align: center;
-  margin-top: 15px;
+  justify-content: space-around;
+  width: 75%;
 }
 
-.weather-extras .feelslike, .weather-extras .humidity {
+.weather-extras .extra-widget{
   display: inline-block;
   padding: 5px 12px;
-  color: #fff;
+  margin:  15px 15px;
+  text-align: center;
   font-size: 24px;
   font-weight: 500;
-
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+  color: #fff;
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 8px;
-  margin:  15px 0px;
-
   box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
 }
 
-.feelslike .fltemp, .humidity .humval {
+.weather-extras .extra-widget .value {
   font-size: 50px;
   font-weight: 900;
 }
