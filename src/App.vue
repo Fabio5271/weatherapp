@@ -85,7 +85,7 @@ export default {
       switch (query) {
         case "localtime":
           return `${localtime}`;
-      
+
         default:
           return `${day} ${date} ${month} ${year}`;
       }
@@ -191,16 +191,16 @@ main {
 
 .weather-box .temp {
   display: inline-block;
+  margin: 25px 0px 25px;
   padding: 10px 25px;
+
   color: #fff;
   font-size: 102px;
   font-weight: 900;
-
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 16px;
-  margin: 25px 0px 25px;
-
   box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
 }
 
@@ -216,26 +216,8 @@ main {
   display: flex;
   justify-content: space-around;
   width: 75%;
+  flex-wrap: wrap;
 }
-/* 
-.weather-extras .extra-widget {
-  display: inline-block;
-  padding: 5px 12px;
-  margin: 15px 15px;
-  text-align: center;
-  font-size: 24px;
-  font-weight: 500;
-  text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.25);
-  border-radius: 8px;
-  box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
-}
-
-.weather-extras .extra-widget .value {
-  font-size: 50px;
-  font-weight: 900;
-} */
 
 #app.freezing {
   background-image: url('./assets/backgrounds/freezing.jpg');
