@@ -122,12 +122,12 @@ export default {
       return `${weekday}, ${date} ${month} ${year}`;
     },
     formatTime(hours, minutes, addMinutes = 0) {
-      return `${`${hours + Math.floor(addMinutes / 60)}`.padStart(2, "0")}:${`${minutes + addMinutes % 60}`.padStart(2, "0")}`;
+      return `${`${(Math.floor((hours * 60 + minutes + addMinutes) / 60)) % 24}`.padStart(2, "0")}:${`${(minutes + addMinutes) % 60}`.padStart(2, "0")}`;
     },
     formatTimeDiff(minutes) {
       return minutes % 60 == 0 ?
-        `${Math.abs(Math.floor(minutes / 60))}h` :
-        `${`${Math.abs(Math.floor(minutes / 60))}`.padStart(2, "0")}:${`${Math.abs(minutes % 60)}`.padStart(2, "0")}`;
+        `${Math.floor(Math.abs(minutes) / 60)}h` :
+        `${`${Math.floor(Math.abs(minutes) / 60)}`.padStart(2, "0")}:${`${Math.abs(minutes) % 60}`.padStart(2, "0")}`;
     },
     formatTimeZone(tzMins) {
       return tzMins == 0 ?
