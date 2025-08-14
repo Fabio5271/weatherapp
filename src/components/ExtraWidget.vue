@@ -28,12 +28,12 @@ export default {
 <style scoped>
 .extra-widget {
   display: inline-block;
-  padding: 5px 12px;
-  margin: 15px 15px;
+  padding: 5px 12px 0;
+  margin: 14px;
   text-align: center;
   font-size: 24px;
   font-weight: 500;
-  text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+  text-shadow: 1px 3px rgba(0, 0, 0, 0.25);
   color: #fff;
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 8px;
@@ -41,7 +41,10 @@ export default {
 }
 
 .extra-widget .value {
+  position: relative;
   font-size: 50px;
   font-weight: 900;
+  text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+  top: -4px;
 }
 </style>
