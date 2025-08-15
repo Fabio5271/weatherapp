@@ -141,6 +141,41 @@ export default {
 
 
 <style>
+@media (max-width: 620px) {
+  .extra-widget {
+    font-size: 20px !important;
+  }
+
+  .extra-widget .value {
+    font-size: 40px !important;
+  }
+}
+
+@media (max-width: 526px) {
+  .weather-extras {
+    max-width: 430px !important;
+  }
+
+  .extra-widget {
+    padding: 2px 7px 0px;
+    margin: 6px;
+    font-size: 15px !important;
+    text-shadow: 1px 2px rgba(0, 0, 0, 0.25);
+    box-shadow: 2px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .extra-widget .title {
+    position: relative;
+    top: 1px;
+  }
+
+  .extra-widget .value {
+    font-size: 30px !important;
+    text-shadow: 2px 4px rgba(0, 0, 0, 0.25);
+    top: -2px;
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -268,14 +303,14 @@ main {
   border-bottom: 2px solid rgba(255, 255, 255, 0.25);
   box-shadow: 1px 1px rgba(0, 0, 0, 0.25);
   margin: 18px auto 10px;
-  width: 90%;
+  width: 95%;
   max-width: 866px;
 }
 
 .weather-extras {
   display: flex;
   justify-content: center;
-  width: 90%;
+  width: 95%;
   max-width: 866px;
   flex-wrap: wrap;
 }

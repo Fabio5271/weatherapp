@@ -38,6 +38,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+  transition: 0.4s;
 }
 
 .extra-widget .value {
