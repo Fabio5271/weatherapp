@@ -157,22 +157,22 @@ export default {
   }
 
   .extra-widget {
-    padding: 2px 7px 0px;
-    margin: 6px;
+    padding: 2px 7px 0px !important;
+    margin: 6px !important;
     font-size: 15px !important;
-    text-shadow: 1px 2px rgba(0, 0, 0, 0.25);
-    box-shadow: 2px 4px rgba(0, 0, 0, 0.25);
+    text-shadow: 1px 2px rgba(0, 0, 0, 0.25) !important;
+    box-shadow: 2px 4px rgba(0, 0, 0, 0.25) !important;
   }
 
   .extra-widget .title {
-    position: relative;
-    top: 1px;
+    position: relative !important;
+    top: 1px !important;
   }
 
   .extra-widget .value {
     font-size: 30px !important;
-    text-shadow: 2px 4px rgba(0, 0, 0, 0.25);
-    top: -2px;
+    text-shadow: 2px 4px rgba(0, 0, 0, 0.25) !important;
+    top: -2px !important;
   }
 }
 
