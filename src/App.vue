@@ -183,7 +183,7 @@ export default {
 }
 
 body {
-  font-family: 'montserrat', sans-serif;
+  font-family: 'Montserrat Variable', sans-serif;
 }
 
 #app {
