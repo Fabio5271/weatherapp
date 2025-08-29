@@ -1,22 +1,36 @@
 <template>
   <div id="app" :class="{
-    'freezing': typeof weather.main != 'undefined' && weather.main.temp <= 0,
-    'cold': typeof weather.main != 'undefined' && weather.main.temp > 0 && weather.main.temp <= 10,
-    'semi-cold': typeof weather.main != 'undefined' && weather.main.temp > 10 && weather.main.temp <= 15,
-    'sl-cold': typeof weather.main != 'undefined' && weather.main.temp > 15 && weather.main.temp <= 18,
+    'cold-4': typeof weather.main != 'undefined' && weather.main.temp <= 0,
+    'cold-3': typeof weather.main != 'undefined' && weather.main.temp > 0 && weather.main.temp <= 10,
+    'cold-2': typeof weather.main != 'undefined' && weather.main.temp > 10 && weather.main.temp <= 15,
+    'cold-1': typeof weather.main != 'undefined' && weather.main.temp > 15 && weather.main.temp <= 18,
     'midtemp': typeof weather.main != 'undefined' && weather.main.temp > 18 && weather.main.temp <= 22,
-    'sl-warm': typeof weather.main != 'undefined' && weather.main.temp > 22 && weather.main.temp <= 25,
-    'semi-warm': typeof weather.main != 'undefined' && weather.main.temp > 25 && weather.main.temp <= 28,
-    'warm': typeof weather.main != 'undefined' && weather.main.temp > 28 && weather.main.temp <= 32,
-    'hot': typeof weather.main != 'undefined' && weather.main.temp > 32,
+    'warm-1': typeof weather.main != 'undefined' && weather.main.temp > 22 && weather.main.temp <= 25,
+    'warm-2': typeof weather.main != 'undefined' && weather.main.temp > 25 && weather.main.temp <= 28,
+    'warm-3': typeof weather.main != 'undefined' && weather.main.temp > 28 && weather.main.temp <= 32,
+    'warm-4': typeof weather.main != 'undefined' && weather.main.temp > 32,
     'undef': typeof weather.main == 'undefined'
   }">
     <main>
       <div class="search-box">
-        <input type="text" class="search-bar" placeholder="Search...  (City name, Country code)" v-model="query"
-          @keypress="fetchWeather" />
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="Search...  (City name, Country code)" v-model="query"
+            @keypress.enter="fetchWeather" />
+          <div class="btn-area">
+            <button class="search-button" @click="fetchWeather" @mouseenter="forceShowSearch = true"
+              @mouseleave="forceShowSearch = false">
+              <div class="loading-circle" v-if="isLoadingSearch && !forceShowSearch"></div>
+              <img v-else class="search-icon" src="./assets/icons/search-icon-2.png" alt="🔍" />
+            </button>
+            <button class="geolocation-button" @click="getCurrentLocation" :disabled="isLoadingLocation">
+              <div class="loading-circle" v-if="isLoadingLocation"></div>
+              <img v-else class="geolocation-icon" src="./assets/icons/locate-icon-3.png" alt="📍" />
+            </button>
+          </div>
+        </div>
         <div class="search-error-msg" v-if="weather.error == 'Failed to fetch weather data'">Couldn't find weather data
           for this location...</div>
+        <div class="geolocation-error-msg" v-if="geoLocationError">{{ geoLocationError }}</div>
       </div>
 
       <div class="results-container" v-if="typeof weather.main != 'undefined'">
@@ -63,20 +77,85 @@ export default {
     return {
       url_base: 'https://weatherapp-backend-fawn.vercel.app/api/',
       query: '',
-      weather: {}
+      weather: {},
+      isLoadingSearch: false,
+      forceShowSearch: false,
+      isLoadingLocation: false,
+      geoLocationError: null
     }
   },
+  mounted() {
+    this.getCurrentLocation();
+  },
   methods: {
-    fetchWeather(e) {
-      if (e.key == "Enter") {
-        fetch(`${this.url_base}weather?q=${this.query}`)
-          .then(res => {
-            return res.json();
-          }).then(this.setResults);
-      }
+    fetchWeather() {
+      this.isLoadingSearch = true;
+      fetch(`${this.url_base}weather?q=${this.query}`)
+        .then(res => {
+          return res.json();
+        }).then(this.setResults)
+        .catch(error => {
+          console.error('Error fetching weather by search:', error);
+          this.isLoadingSearch = false;
+        });
+    },
+    fetchWeatherByCoords(lat, lon) {
+      fetch(`${this.url_base}weather?lat=${lat}&lon=${lon}`)
+        .then(res => {
+          return res.json();
+        }).then(this.setResults)
+        .catch(error => {
+          console.error('Error fetching weather by coordinates:', error);
+          this.isLoadingLocation = false;
+          this.geoLocationError = 'Failed to fetch weather data for your location.';
+        });
     },
     setResults(results) {
       this.weather = results;
+      this.geoLocationError = null;
+      this.isLoadingSearch = false;
+      this.isLoadingLocation = false;
+    },
+    getCurrentLocation() {
+      if (!navigator.geolocation) {
+        this.geoLocationError = 'Geolocation is not supported by this browser.';
+        console.error('Geolocation is not supported by this browser.');
+        return;
+      }
+      this.isLoadingLocation = true;
+      this.geoLocationError = null;
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          console.log(`Geolocation API returned position: lat: ${lat} | lon: ${lon}`);
+          this.fetchWeatherByCoords(lat, lon);
+        },
+        (error) => {
+          this.isLoadingLocation = false;
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              this.geoLocationError = 'Please allow location access, or enter a city manually.';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              this.geoLocationError = 'Location information is unavailable.';
+              break;
+            case error.TIMEOUT:
+              this.geoLocationError = 'Location request timed out.';
+              break;
+            default:
+              this.geoLocationError = 'An unknown error occurred while retrieving location.';
+              break;
+          }
+          console.error(`Geolocation API error: ${error.message}`);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000  // Cache position for 5 minutes
+        }
+      );
     },
     dateBuilder(query) {
       let d = new Date();
@@ -193,9 +272,9 @@ body {
 }
 
 main {
+  display: grid;
   min-height: 100vh;
   padding: 25px;
-  display: grid;
   grid-template-rows: min-content;
   align-items: start;
   justify-content: stretch;
@@ -203,13 +282,28 @@ main {
 }
 
 .search-box {
+  display: grid;
   width: 100%;
+  grid-template-columns: 1fr 1fr;
 }
 
 .search-box .search-bar {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   width: 100%;
-  padding: 15px;
+  grid-column-start: 1;
+  grid-column-end: 3;
+
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 0px 16px 0px 16px;
+  transition: 0.4s;
+}
+
+.search-input {
+  display: inline-block;
+  width: 100%;
+  padding: 15px 10px 15px 15px;
   color: #000;
   font-size: 20px;
 
@@ -217,31 +311,103 @@ main {
   border: none;
   outline: none;
   background: none;
-
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 0px 16px 0px 16px;
-  transition: 0.4s;
 }
 
-.search-box .search-bar:focus {
+.search-box .search-bar:focus-within {
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.25);
   background-color: rgba(255, 255, 255, 0.75);
   border-radius: 16px 0px 16px 0px;
 }
 
-.search-error-msg {
+.search-bar .btn-area {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding: 0 15px 0 0;
+  flex: 1 1 100px;
+  max-width: 100px;
+  min-width: 83px;
+}
+
+.search-bar .btn-area button {
+  width: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin: auto 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0.5;
+  font-size: 24px;
+}
+
+.search-icon,
+.geolocation-icon,
+.search-button .loading-circle,
+.geolocation-button .loading-circle {
+  height: 100%;
+  width: 100%;
+}
+
+.search-icon,
+.search-button .loading-circle,
+.geolocation-button .loading-circle {
+  scale: 90%;
+}
+
+.loading-circle {
+  border: 4px solid #000;
+  border-top: 4px solid rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.search-error-msg,
+.geolocation-error-msg {
   padding: 1px 3px;
-  margin: 0px 12px;
   width: fit-content;
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(0, 0, 0, 0.85);
   font-size: 16px;
-  background-color: rgba(255, 200, 200, 0.4);
+  background-color: rgba(255, 200, 200, 0.5);
   border-radius: 0 0 7px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
   transition: 0.4s;
+}
+
+.search-error-msg {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  margin: 0px 13px;
 }
 
 .search-box:focus-within .search-error-msg {
   margin: 0;
+}
+
+.geolocation-error-msg {
+  justify-self: end;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  margin: 0;
+}
+
+.search-box:focus-within .geolocation-error-msg {
+  margin: 0px 13px;
 }
 
 .results-container {
@@ -315,19 +481,19 @@ main {
   flex-wrap: wrap;
 }
 
-#app.freezing {
+#app.cold-4 {
   background-image: url('./assets/backgrounds/freezing.jpg');
 }
 
-#app.cold {
+#app.cold-3 {
   background-image: url('./assets/backgrounds/cold.jpg');
 }
 
-#app.semi-cold {
+#app.cold-2 {
   background-image: url('./assets/backgrounds/semi-cold.jpg');
 }
 
-#app.sl-cold {
+#app.cold-1 {
   background-image: url('./assets/backgrounds/sl-cold.jpg');
 }
 
@@ -335,19 +501,19 @@ main {
   background-image: url('./assets/backgrounds/midtemp.png');
 }
 
-#app.sl-warm {
+#app.warm-1 {
   background-image: url('./assets/backgrounds/sl-warm.jpg');
 }
 
-#app.semi-warm {
+#app.warm-2 {
   background-image: url('./assets/backgrounds/semi-warm.jpg');
 }
 
-#app.warm {
+#app.warm-3 {
   background-image: url('./assets/backgrounds/warm.jpg');
 }
 
-#app.hot {
+#app.warm-4 {
   background-image: url('./assets/backgrounds/hot.jpg');
 }
 
