@@ -1,16 +1,5 @@
 <template>
-  <div id="app" :class="{
-    'cold-4': typeof weather.main != 'undefined' && weather.main.temp <= 0,
-    'cold-3': typeof weather.main != 'undefined' && weather.main.temp > 0 && weather.main.temp <= 10,
-    'cold-2': typeof weather.main != 'undefined' && weather.main.temp > 10 && weather.main.temp <= 15,
-    'cold-1': typeof weather.main != 'undefined' && weather.main.temp > 15 && weather.main.temp <= 18,
-    'midtemp': typeof weather.main != 'undefined' && weather.main.temp > 18 && weather.main.temp <= 22,
-    'warm-1': typeof weather.main != 'undefined' && weather.main.temp > 22 && weather.main.temp <= 25,
-    'warm-2': typeof weather.main != 'undefined' && weather.main.temp > 25 && weather.main.temp <= 28,
-    'warm-3': typeof weather.main != 'undefined' && weather.main.temp > 28 && weather.main.temp <= 32,
-    'warm-4': typeof weather.main != 'undefined' && weather.main.temp > 32,
-    'undef': typeof weather.main == 'undefined'
-  }">
+  <div id="app" :class="appBgImage">
     <main>
       <div class="search-box">
         <div class="search-bar">
@@ -81,7 +70,8 @@ export default {
       isLoadingSearch: false,
       forceShowSearch: false,
       isLoadingLocation: false,
-      geoLocationError: null
+      geoLocationError: null,
+      appBgImage: 'undef'
     }
   },
   mounted() {
@@ -115,6 +105,7 @@ export default {
       this.geoLocationError = null;
       this.isLoadingSearch = false;
       this.isLoadingLocation = false;
+      this.setAppBgImage();
     },
     getCurrentLocation() {
       if (!navigator.geolocation) {
@@ -212,6 +203,26 @@ export default {
       return tzMins == 0 ?
         "UTC" : tzMins > 0 ?
           `UTC +${this.formatTimeDiff(tzMins)}` : `UTC -${this.formatTimeDiff(tzMins)}`;
+    },
+    setAppBgImage() {
+      if (typeof this.weather.main == 'undefined') {
+        this.appBgImage = 'undef';
+        return;
+      }
+      
+      let temp = this.weather.main.temp;
+
+      this.appBgImage = temp <= -12 ? 'cold-5' :
+      temp <= 0 ? 'cold-4' :
+      temp <= 10 ? 'cold-3' :
+      temp <= 15 ? 'cold-2' :
+      temp <= 19 ? 'cold-1' :
+      temp <= 22 ? 'midtemp' :
+      temp <= 25 ? 'warm-1' :
+      temp <= 28 ? 'warm-2' :
+      temp <= 32 ? 'warm-3' :
+      temp <= 36 ? 'warm-4' :
+      'warm-5'
     }
   }
 }
@@ -267,7 +278,7 @@ body {
 
 #app {
   background-size: cover;
-  background-position: bottom;
+  background-position: center;
   transition: 0.4s;
 }
 
@@ -285,6 +296,7 @@ main {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: max-content 22px;
 }
 
 .search-box .search-bar {
@@ -416,7 +428,7 @@ main {
   justify-content: center;
   align-items: center;
   align-self: stretch;
-  margin: 25px 0 50px;
+  margin: 3px 0 50px;
 }
 
 .location-box .location {
@@ -425,7 +437,12 @@ main {
   font-weight: 500;
   text-align: center;
   text-shadow: 1px 3px rgba(0, 0, 0, 0.25);
-  margin-bottom: 5px;
+  margin: 0 auto 5px;
+  /* padding: 0 7px;
+  background-color: rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  border-radius: 9px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.22); */
 }
 
 .location-box .date {
@@ -435,6 +452,12 @@ main {
   font-style: italic;
   text-align: center;
   text-shadow: 1px 2px rgba(0, 0, 0, 0.25);
+  margin: 0 auto;
+  /* padding: 0 7px;
+  background-color: rgba(0, 0, 0, 0.18);
+  width: fit-content;
+  border-radius: 9px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); */
 }
 
 .weather-box {
@@ -481,43 +504,51 @@ main {
   flex-wrap: wrap;
 }
 
+#app.cold-5 {
+  background-image: url('./assets/backgrounds/cold-5.jpg');
+}
+
 #app.cold-4 {
-  background-image: url('./assets/backgrounds/freezing.jpg');
+  background-image: url('./assets/backgrounds/cold-4.jpg');
 }
 
 #app.cold-3 {
-  background-image: url('./assets/backgrounds/cold.jpg');
+  background-image: url('./assets/backgrounds/cold-3.jpg');
 }
 
 #app.cold-2 {
-  background-image: url('./assets/backgrounds/semi-cold.jpg');
+  background-image: url('./assets/backgrounds/cold-2.jpg');
 }
 
 #app.cold-1 {
-  background-image: url('./assets/backgrounds/sl-cold.jpg');
+  background-image: url('./assets/backgrounds/cold-1.jpg');
 }
 
 #app.midtemp {
-  background-image: url('./assets/backgrounds/midtemp.png');
+  background-image: url('./assets/backgrounds/midtemp.jpg');
 }
 
 #app.warm-1 {
-  background-image: url('./assets/backgrounds/sl-warm.jpg');
+  background-image: url('./assets/backgrounds/warm-1.jpg');
 }
 
 #app.warm-2 {
-  background-image: url('./assets/backgrounds/semi-warm.jpg');
+  background-image: url('./assets/backgrounds/warm-2.jpg');
 }
 
 #app.warm-3 {
-  background-image: url('./assets/backgrounds/warm.jpg');
+  background-image: url('./assets/backgrounds/warm-3.jpg');
 }
 
 #app.warm-4 {
-  background-image: url('./assets/backgrounds/hot.jpg');
+  background-image: url('./assets/backgrounds/warm-4.jpg');
+}
+
+#app.warm-5 {
+  background-image: url('./assets/backgrounds/warm-5.jpg');
 }
 
 #app.undef {
-  background-image: url('./assets/backgrounds/undef.png');
+  background-image: url('./assets/backgrounds/undef.jpg');
 }
 </style>
