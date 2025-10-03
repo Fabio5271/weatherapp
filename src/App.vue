@@ -38,7 +38,7 @@
         <div class="weather-extras">
           <ExtraWidget title="Feels Like" :val="Math.round(weather.main.feels_like)" unit="°C" />
           <ExtraWidget title="Humidity" :val="weather.main.humidity" unit="%" />
-          <ExtraWidget title="Wind Speed" :val="weather.wind.speed" unit=" m/s" />
+          <ExtraWidget title="Wind Speed" :val="(weather.wind.speed * 3.6).toFixed(1)" unit=" km/h" />
           <ExtraWidget title="Wind Direction" :val="weather.wind.deg" unit="°" />
           <ExtraWidget title="Remote Time" :val="dateBuilder('remote_time')" />
           <ExtraWidget title="Remote Timezone" :val="dateBuilder('remote_tz')" />
@@ -243,8 +243,9 @@ export default {
 
 
 <style>
-@media (max-width: 620px) {
+@media (max-width: 774px) {
   .extra-widget {
+    margin: 10px !important;
     font-size: 20px !important;
   }
 
@@ -253,9 +254,37 @@ export default {
   }
 }
 
-@media (max-width: 526px) {
+@media (max-width: 513px) {
+  main {
+    padding: 20px !important;
+  }
+
+  .location-box .location {
+    font-size: 34px !important;
+    margin: 0 auto 3px !important;
+  }
+
+  .location-box .date {
+    font-size: 21px !important;
+  }
+
+  .weather-box .temp {
+    margin: 16px 0px !important;
+    padding: 8px 22px !important;
+    font-size: 94px !important;
+    font-weight: 900 !important;
+  }
+
+  .weather-box .weather {
+    font-size: 42px !important;
+  }
+
+  .weather-spacer {
+    margin: 14px auto 6px !important;
+  }
+
   .weather-extras {
-    max-width: 430px !important;
+    max-width: 436px !important;
   }
 
   .extra-widget {
@@ -263,6 +292,7 @@ export default {
     margin: 6px !important;
     font-size: 15px !important;
     text-shadow: 1px 2px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 7px !important;
     box-shadow: 2px 4px rgba(0, 0, 0, 0.25) !important;
   }
 
@@ -308,7 +338,7 @@ main {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: max-content 22px;
+  grid-template-rows: max-content min-content;
 }
 
 .search-box .search-bar {
@@ -416,7 +446,7 @@ main {
 .search-error-msg {
   grid-column-start: 1;
   grid-column-end: 2;
-  margin: 0px 13px;
+  margin: 0 3px 0 14px;
 }
 
 .search-box:focus-within .search-error-msg {
@@ -431,7 +461,7 @@ main {
 }
 
 .search-box:focus-within .geolocation-error-msg {
-  margin: 0px 13px;
+  margin: 0px 14px 0 3px;
 }
 
 .results-container {
@@ -440,7 +470,8 @@ main {
   justify-content: center;
   align-items: center;
   align-self: stretch;
-  margin: 3px 0 50px;
+  /* margin: 0 0 50px; */
+  padding: 10px 0;
 }
 
 .location-box .location {
@@ -495,14 +526,14 @@ main {
   box-shadow: 1px 1px rgba(0, 0, 0, 0.25);
   margin: 18px auto 10px;
   width: 95%;
-  max-width: 866px;
+  max-width: 1140px;
 }
 
 .weather-extras {
   display: flex;
   justify-content: center;
   width: 95%;
-  max-width: 866px;
+  max-width: 1140px;
   flex-wrap: wrap;
 }
 
