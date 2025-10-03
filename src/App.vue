@@ -89,6 +89,7 @@ export default {
           this.isLoadingSearch = false;
         });
     },
+
     fetchWeatherByCoords(lat, lon) {
       fetch(`${this.url_base}weather?lat=${lat}&lon=${lon}`)
         .then(res => {
@@ -100,6 +101,7 @@ export default {
           this.geoLocationError = 'Failed to fetch weather data for your location.';
         });
     },
+
     setResults(results) {
       this.weather = results;
       this.geoLocationError = null;
@@ -107,6 +109,7 @@ export default {
       this.isLoadingLocation = false;
       this.setAppBgImage();
     },
+
     getCurrentLocation() {
       if (!navigator.geolocation) {
         this.geoLocationError = 'Geolocation is not supported by this browser.';
@@ -148,6 +151,7 @@ export default {
         }
       );
     },
+
     dateBuilder(query) {
       let d = new Date();
 
@@ -169,16 +173,15 @@ export default {
           return this.weather.timezone / 60 + d.getTimezoneOffset();
 
         case "time_diff":
-          if (this.dateBuilder("tz_diff") < 0) {
-            return `-${this.formatTimeDiff(this.dateBuilder("tz_diff"))}`;
-          } else {
-            return `+${this.formatTimeDiff(this.dateBuilder("tz_diff"))}`;
-          }
+          return this.dateBuilder("tz_diff") < 0 ?
+            `-${this.formatTimeDiff(this.dateBuilder("tz_diff"))}` :
+            `+${this.formatTimeDiff(this.dateBuilder("tz_diff"))}`;
 
         default:
           return this.currentDate();
       }
     },
+
     currentDate() {
       let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       let weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -191,38 +194,47 @@ export default {
 
       return `${weekday}, ${date} ${month} ${year}`;
     },
-    formatTime(hours, minutes, addMinutes = 0) {
-      return `${`${(Math.floor((hours * 60 + minutes + addMinutes) / 60)) % 24}`.padStart(2, "0")}:${`${(minutes + addMinutes) % 60}`.padStart(2, "0")}`;
+
+    formatTime(hours, minutes, timeDiffMins = 0) {
+      if (timeDiffMins == 0) { // Just return formatted time if no difference 
+        return `${`${hours}`.padStart(2, "0")}:${`${minutes}`.padStart(2, "0")}`;
+      }
+      let timeInMins = hours * 60 + minutes + timeDiffMins;
+      if (timeInMins < 0) { // This being negative means we have to go back a day
+        timeInMins += 1440; // Loop back correctly to yesterday's 24-h interval by adding a full day to our negative time
+      }
+      return `${`${Math.floor(timeInMins / 60) % 24}`.padStart(2, "0")}:${`${timeInMins % 60}`.padStart(2, "0")}`;
     },
+
     formatTimeDiff(minutes) {
       return minutes % 60 == 0 ?
         `${Math.floor(Math.abs(minutes) / 60)}h` :
         `${`${Math.floor(Math.abs(minutes) / 60)}`.padStart(2, "0")}:${`${Math.abs(minutes) % 60}`.padStart(2, "0")}`;
     },
+
     formatTimeZone(tzMins) {
       return tzMins == 0 ?
         "UTC" : tzMins > 0 ?
           `UTC +${this.formatTimeDiff(tzMins)}` : `UTC -${this.formatTimeDiff(tzMins)}`;
     },
+
     setAppBgImage() {
       if (typeof this.weather.main == 'undefined') {
         this.appBgImage = 'undef';
         return;
       }
-      
       let temp = this.weather.main.temp;
-
       this.appBgImage = temp <= -12 ? 'cold-5' :
-      temp <= 0 ? 'cold-4' :
-      temp <= 10 ? 'cold-3' :
-      temp <= 15 ? 'cold-2' :
-      temp <= 19 ? 'cold-1' :
-      temp <= 22 ? 'midtemp' :
-      temp <= 25 ? 'warm-1' :
-      temp <= 28 ? 'warm-2' :
-      temp <= 32 ? 'warm-3' :
-      temp <= 36 ? 'warm-4' :
-      'warm-5'
+        temp <= 0 ? 'cold-4' :
+          temp <= 10 ? 'cold-3' :
+            temp <= 15 ? 'cold-2' :
+              temp <= 19 ? 'cold-1' :
+                temp <= 22 ? 'midtemp' :
+                  temp <= 25 ? 'warm-1' :
+                    temp <= 28 ? 'warm-2' :
+                      temp <= 32 ? 'warm-3' :
+                        temp <= 36 ? 'warm-4' :
+                          'warm-5'
     }
   }
 }
@@ -438,11 +450,6 @@ main {
   text-align: center;
   text-shadow: 1px 3px rgba(0, 0, 0, 0.25);
   margin: 0 auto 5px;
-  /* padding: 0 7px;
-  background-color: rgba(0, 0, 0, 0.1);
-  width: fit-content;
-  border-radius: 9px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.22); */
 }
 
 .location-box .date {
@@ -453,11 +460,6 @@ main {
   text-align: center;
   text-shadow: 1px 2px rgba(0, 0, 0, 0.25);
   margin: 0 auto;
-  /* padding: 0 7px;
-  background-color: rgba(0, 0, 0, 0.18);
-  width: fit-content;
-  border-radius: 9px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); */
 }
 
 .weather-box {
