@@ -2,6 +2,7 @@
 node_modules
 dist
 src/assets/old-backgrounds
+src/test-data.json
 
 # local env files
 .env.local
